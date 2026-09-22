@@ -4,6 +4,7 @@ An AI-powered application for analyzing expert interview transcripts across mult
 
 The application uses semantic retrieval and an LLM to answer interview-guide questions, surface supporting evidence, compare markets, and enable cross-transcript questions while keeping responses grounded in the original expert statements.
 
+Live App: https://hasamex-ai-interview-analyzer-4fhzfdzbkdpkhmrzvpg9zy.streamlit.app/
 ---
 
 ## 1. Problem Statement
