@@ -3,7 +3,6 @@ import json
 from dotenv import load_dotenv
 from groq import Groq
 
-
 load_dotenv()
 
 
@@ -11,11 +10,21 @@ class LLMClient:
 
     def __init__(self):
 
+        # First try local .env / environment variable
         api_key = os.getenv("GROQ_API_KEY")
+
+        # If running on Streamlit Cloud, read from Streamlit Secrets
+        if not api_key:
+            try:
+                import streamlit as st
+                api_key = st.secrets.get("GROQ_API_KEY")
+            except Exception:
+                api_key = None
 
         if not api_key:
             raise ValueError(
-                "GROQ_API_KEY not found in .env"
+                "GROQ_API_KEY is not configured. "
+                "Add it to .env locally or Streamlit Secrets when deployed."
             )
 
         self.client = Groq(
@@ -23,7 +32,6 @@ class LLMClient:
         )
 
         self.model = "openai/gpt-oss-120b"
-
 
     def answer(self, question, evidence):
 
@@ -44,7 +52,6 @@ Timestamp: {item["timestamp"]}
 Question: Q{item["question_number"]}
 Source text: {item["text"]}
 """
-
 
         # -----------------------------------------
         # Structured research prompt
@@ -101,7 +108,6 @@ Use exactly this structure:
 }}
 """
 
-
         # -----------------------------------------
         # Call Groq
         # -----------------------------------------
@@ -131,7 +137,6 @@ Use exactly this structure:
             }
         )
 
-
         # -----------------------------------------
         # Parse JSON
         # -----------------------------------------
@@ -149,6 +154,5 @@ Use exactly this structure:
                 "common_themes": [],
                 "market_differences": []
             }
-
 
         return result
